@@ -1,5 +1,7 @@
 package com.springboot.application.repositry;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 
@@ -75,5 +77,19 @@ private EntityManager entity;
 		 currentsession.saveOrUpdate(label);
 		
 		return true;
+	}
+	@Override
+	@Transactional
+	public List<Note> getnotes(long userid) {
+		Session currentsession = entity.unwrap(Session.class);
+		List<Note> notes=currentsession.createQuery("from Note where userid=:userid").getResultList();
+		return notes;
+	}
+	@Override
+	@Transactional
+	public List<Label> gelabel(long userid) {
+		Session currentsession=entity.unwrap(Session.class);
+		List<Label> labels=currentsession.createQuery("from Note where userid=userid").getResultList();
+		return labels;
 	}
 }

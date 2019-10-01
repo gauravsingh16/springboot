@@ -1,4 +1,4 @@
-package com.springboot.application.model;
+package com.springboot.application.exceptions;
 
 public class Response {
 private String subject;

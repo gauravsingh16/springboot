@@ -1,15 +1,15 @@
 package com.springboot.application.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.springboot.application.config.UserToken;
-import com.springboot.application.dto.Labeldto;
 import com.springboot.application.dto.Notedto;
-import com.springboot.application.model.Label;
 import com.springboot.application.model.Note;
 import com.springboot.application.model.UserInfo;
 import com.springboot.application.repositry.NoteRepository;
@@ -26,6 +26,10 @@ private UserRepo userrepo;
 
 @Autowired
 private ModelMapper mapper;
+@Autowired
+private ElasticService elasticservice;
+
+
 	@Override
 	public boolean createnote(String token, Notedto dto) {
 		long id = usertoken.parseToken(token);
@@ -38,10 +42,15 @@ private ModelMapper mapper;
                info.setCreatetime(LocalDateTime.now());
                info.setUpdatetime(LocalDateTime.now());
                userInfo.getNotes().add(info);
-               
+              
                boolean check = noterepo.createnote(info);
                if (check) {
-               	return true;
+            	   try {
+       				elasticservice.CreateNote(info);
+       			} catch (Exception e) {
+       				e.printStackTrace();
+       			}
+            	   return true;
                }
                  else {
 					
@@ -96,70 +105,13 @@ private ModelMapper mapper;
 		return false;
 	
 	}
+	@Override
+	public List<Note> getnotes(String token) {
+		long id=usertoken.parseToken(token);
 
-	@Override
-	public boolean createlabel(String token,long noteId, Labeldto dto) {
-		long id = usertoken.parseToken(token);
-		 UserInfo userInfo =userrepo.findbyId(id);
-		 Note noteinfo=noterepo.findbyId(noteId);
-		if (userInfo!=null&& noteinfo!=null)
-		{
-			Label info = mapper.map(dto, Label.class);
-             userInfo.getGetManynotes().add(info);
-             noteinfo.getLabel().add(info);
-              boolean check = noterepo.createlabel(info);
-              if (check) {
-              	return true;
-              }
-                else {
-					
-              	  return false;
-				}                
-		}
-      else {
-			
-    	  return false;
-		}         
-    }
-
-	@Override
-	public boolean deletelabel(String token, long id) {
-		System.out.println("inside service");
-		long ids=usertoken.parseToken(token);
-		UserInfo userinfo=userrepo.findbyId(ids);
-		Note noteinfo=noterepo.findbyId(id);
-		Object objectuserid=userinfo.getId();
-		Object objectnoteid=noteinfo.getId();
-		if(userinfo.getGetManynotes().contains(objectuserid)&& noteinfo.getLabel().contains(objectnoteid));
-		{
-			System.out.println("inside if");
-		boolean check=noterepo.deletelabel(id);
-		if(check)
-		{
-			return true;
-		}else
-		{
-			return false;
-		}
-	}
-	}
-	@Override
-	public boolean updatelabel(long id, String token, Labeldto dto) {
-		long ids=usertoken.parseToken(token);
-		UserInfo userInfo=userrepo.findbyId(ids);
-		if(userInfo!=null)
-		{	System.out.println(userInfo.getId());
-			Label labelinfo=mapper.map(dto,Label.class);
-			labelinfo.setLabelId(id);
-			boolean check=noterepo.updatelabel(labelinfo);
-			if(check)
-			{	
-				return true;
-			}
-		}
-		
-		return false;
-	
+		List<Note>notes=noterepo.getnotes(id);
+		notes.stream().sorted((e1,e2)->e2.getCreatetime().compareTo(e1.getCreatetime())).collect(Collectors.toList());
+		return notes;
 	}
 
 }

@@ -41,11 +41,11 @@ public class UserImplRepo implements UserRepo {
 	@SuppressWarnings("deprecation")
 	@Transactional
 	@Override
-	public UserInfo getid(String email) {
+	public List<UserInfo> getid(String email) {
 		Session currentsession = entity.unwrap(Session.class);
-		Query query1 = currentsession.createQuery("from UserInfo where email=:email");
-		query1.setParameter("email", email);
-		return (UserInfo) query1.uniqueResult();
+		List<UserInfo> query1 = currentsession.createQuery("from UserInfo where email=:email").getResultList();
+		
+		return  query1;
 	}
 
 	

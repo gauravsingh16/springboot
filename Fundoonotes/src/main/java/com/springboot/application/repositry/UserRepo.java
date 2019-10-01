@@ -8,7 +8,7 @@ import com.springboot.application.model.UserInfo;
 public interface UserRepo {
 	public List<UserInfo> getallusers();
 	
-	public UserInfo getid(String email) ;
+	public List<UserInfo> getid(String email) ;
 	public UserInfo dologin(String email);
 	public UserInfo sendemail(String email);
 	public boolean save(UserInfo info);

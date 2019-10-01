@@ -1,0 +1,32 @@
+{"properties": [
+  {
+    "name": "app1.exchange.name",
+    "type": "java.lang.String",
+    "description": "A description for 'app1.exchange.name'"
+  },
+  {
+    "name": "app1.queue.name",
+    "type": "java.lang.String",
+    "description": "A description for 'app1.queue.name'"
+  },
+  {
+    "name": "app1.routing.key",
+    "type": "java.lang.String",
+    "description": "A description for 'app1.routing.key'"
+  },
+  {
+    "name": "app2.exchange.name",
+    "type": "java.lang.String",
+    "description": "A description for 'app2.exchange.name'"
+  },
+  {
+    "name": "app2.queue.name",
+    "type": "java.lang.String",
+    "description": "A description for 'app2.queue.name'"
+  },
+  {
+    "name": "app2.routing.key",
+    "type": "java.lang.String",
+    "description": "A description for 'app2.routing.key'"
+  }
+]}

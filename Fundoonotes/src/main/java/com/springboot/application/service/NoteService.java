@@ -1,19 +1,17 @@
 package com.springboot.application.service;
 
-import com.springboot.application.dto.Labeldto;
+import java.util.List;
+
 import com.springboot.application.dto.Notedto;
+import com.springboot.application.model.Note;
 
 public interface NoteService {
 
-public boolean createnote(String token,Notedto dto);
-	
-	public boolean deletenote(String token,long id);
+	public boolean createnote(String token, Notedto dto);
 
-	public boolean updatenote(long id,String token,Notedto dto);
-	
-	public boolean createlabel(String token,long id,Labeldto dto);
-	
-	public boolean deletelabel(String token,long id);
-	
-	public boolean updatelabel(long id,String token,Labeldto dto);
+	public boolean deletenote(String token, long id);
+
+	public boolean updatenote(long id, String token, Notedto dto);
+
+	public List<Note> getnotes(String token);
 }

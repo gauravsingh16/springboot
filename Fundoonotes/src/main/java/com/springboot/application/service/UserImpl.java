@@ -38,18 +38,34 @@ public class UserImpl implements UserService {
 	@Override
 	public long getid(String email) {
 		// UserInfo userinfo = mapper.map(email, UserInfo.class);
-		UserInfo info = userrepo.getid(email);
-		System.out.println(info.getId());
-		return info.getId();
+		List<UserInfo> info = userrepo.getid(email);
+		for(UserInfo user:info)
+		{
+			if(user.getId()>0);
+			{
+				return user.getId();
+			}
+		}
+		return 0;
+		
 	}
 	@Override
 	public boolean save(Registerdto dto) {
 		System.out.println(dto.getEmail());
+		SimpleMailMessage message = new SimpleMailMessage();
+		message.setTo(dto.getEmail());
+		message.setFrom("gauravpreet.98@gmail.com");
+		message.setSubject("For Confirmation");
 		UserInfo userinfo = mapper.map(dto, UserInfo.class);
 		userinfo.setPassword(encoder.encode(userinfo.getPassword()));
 		boolean check = userrepo.save(userinfo);
-		if (check) {
 		
+		if (check) {
+			UserInfo info = userrepo.sendemail(userinfo.getEmail());
+			String token = usertoken.tokengenerate(info.getId());
+			message.setText("http://localhost:8082/user/verify?token="+token);
+			mailsender.send(message);
+			
 			return true;
 		}
 		return false;
@@ -82,7 +98,6 @@ public class UserImpl implements UserService {
 	public boolean sendmail(Logindto user) {
 
 		SimpleMailMessage message = new SimpleMailMessage();
-
 		message.setTo(user.getEmail());
 		message.setFrom("gauravpreet.98@gmail.com");
 		message.setSubject("change password");
