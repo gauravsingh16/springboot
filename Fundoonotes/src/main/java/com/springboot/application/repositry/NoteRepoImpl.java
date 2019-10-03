@@ -92,4 +92,11 @@ private EntityManager entity;
 		List<Label> labels=currentsession.createQuery("from Note where userid=userid").getResultList();
 		return labels;
 	}
+	@Override
+	public List<Note> getnotebytitle(String title) {
+		Session currentsession=entity.unwrap(Session.class);
+		List<Note> notes=currentsession.createQuery("from Note where title=title").getResultList();
+		return notes;
+		
+	}
 }

@@ -9,10 +9,10 @@ import org.springframework.stereotype.Component;
 public class Utility {
 
 	@Autowired
-	private static JavaMailSender mailsender;
+	private JavaMailSender mailsender;
 	
-	public static void mailsend(String url,String token)
-	{	String email=null;
+	public void mailsend(String url,String token,String email)
+	{	
 		SimpleMailMessage message=new SimpleMailMessage();
 		message.setFrom("gauravpreet.98@gmail.com");
 		message.setTo(email);

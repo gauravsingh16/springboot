@@ -31,6 +31,8 @@ public class UserImpl implements UserService {
 
 	@Autowired
 	private UserRepo userrepo;
+	@Autowired
+	private MessageReciever reciever;
 
 	@Autowired
 	private UserToken usertoken;
@@ -52,20 +54,12 @@ public class UserImpl implements UserService {
 	@Override
 	public boolean save(Registerdto dto) {
 		System.out.println(dto.getEmail());
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(dto.getEmail());
-		message.setFrom("gauravpreet.98@gmail.com");
-		message.setSubject("For Confirmation");
 		UserInfo userinfo = mapper.map(dto, UserInfo.class);
 		userinfo.setPassword(encoder.encode(userinfo.getPassword()));
 		boolean check = userrepo.save(userinfo);
-		
 		if (check) {
-			UserInfo info = userrepo.sendemail(userinfo.getEmail());
-			String token = usertoken.tokengenerate(info.getId());
-			message.setText("http://localhost:8082/user/verify?token="+token);
-			mailsender.send(message);
-			
+		
+			reciever.messagerecieve();
 			return true;
 		}
 		return false;
@@ -102,10 +96,14 @@ public class UserImpl implements UserService {
 		message.setFrom("gauravpreet.98@gmail.com");
 		message.setSubject("change password");
 		UserInfo userinfo = mapper.map(user, UserInfo.class);
-		UserInfo info = userrepo.sendemail(userinfo.getEmail());
-		String token = usertoken.tokengenerate(info.getId());
-		message.setText("http://localhost:8082/user/verify?token="+token);
-		mailsender.send(message);
+		List<UserInfo> info = userrepo.sendemail(userinfo.getEmail());
+		for(UserInfo userInfo:info)
+		{	System.out.println(userInfo.getId());
+			String token = usertoken.tokengenerate(userInfo.getId());
+			message.setText("http://localhost:8082/user/verify?token="+token);
+			mailsender.send(message);
+		}
+		
 		LOGGER.info("mail sends");
 		return true;
 	}

@@ -46,7 +46,9 @@ private ElasticService elasticservice;
                boolean check = noterepo.createnote(info);
                if (check) {
             	   try {
-       				elasticservice.CreateNote(info);
+            		   System.out.println(info);
+       			String check1=elasticservice.CreateNote(info);
+       			System.out.println(check1);
        			} catch (Exception e) {
        				e.printStackTrace();
        			}
@@ -112,6 +114,17 @@ private ElasticService elasticservice;
 		List<Note>notes=noterepo.getnotes(id);
 		notes.stream().sorted((e1,e2)->e2.getCreatetime().compareTo(e1.getCreatetime())).collect(Collectors.toList());
 		return notes;
+	}
+
+	@Override
+	public List<Note> searchnote(String title) {
+		List<Note> notes=noterepo.getnotebytitle(title);
+		if(notes.size()>0)
+		{	List<Note>notes1=elasticservice.searchbytitle(title);
+			return notes1;
+		}
+		return null;
+	
 	}
 
 }

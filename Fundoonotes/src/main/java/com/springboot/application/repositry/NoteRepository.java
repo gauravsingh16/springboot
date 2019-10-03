@@ -15,5 +15,5 @@ public interface NoteRepository {
 	public boolean updatelabel(Label label);
 	public List<Note>getnotes(long id);
 	public List<Label>gelabel(long id);
-	
+	public List<Note>getnotebytitle(String title);
 }

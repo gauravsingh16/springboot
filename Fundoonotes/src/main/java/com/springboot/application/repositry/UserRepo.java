@@ -10,7 +10,7 @@ public interface UserRepo {
 	
 	public List<UserInfo> getid(String email) ;
 	public UserInfo dologin(String email);
-	public UserInfo sendemail(String email);
+	public List<UserInfo> sendemail(String email);
 	public boolean save(UserInfo info);
 	public void isverify(long id);
 	public UserInfo forgetpassword(String email);

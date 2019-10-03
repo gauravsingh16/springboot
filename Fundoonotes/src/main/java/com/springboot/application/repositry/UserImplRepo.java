@@ -50,6 +50,7 @@ public class UserImplRepo implements UserRepo {
 
 	
 	@Override
+	@Transactional 
 	public UserInfo dologin(String email) {
 
 		Session currentsession = entity.unwrap(Session.class);
@@ -60,14 +61,19 @@ public class UserImplRepo implements UserRepo {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	@Transactional
 	@Override
-	public UserInfo sendemail(String email) {
+	public List<UserInfo> sendemail(String email) {
 		Session currentsession = entity.unwrap(Session.class);
-		Query query1 = currentsession.createQuery("from UserInfo where email=:email");
-		query1.setParameter("email", email);
-		System.out.println(query1.list().toString());
-		return (UserInfo) query1.uniqueResult();
+		System.out.println(email);
+	//	Query query1 = currentsession.createQuery("from UserInfo where email=:email");
+		//query1.setParameter("email",email);
+		//List<UserInfo> query=query1.getResultList();
+	return	currentsession.createQuery("from UserInfo where email='"+email+"'").getResultList();
+		//System.out.println(query);
+		
+		//return query;
 
 	}
 

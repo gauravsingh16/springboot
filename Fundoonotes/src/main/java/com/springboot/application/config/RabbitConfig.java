@@ -71,7 +71,6 @@ return BindingBuilder.bind(getApp1Queue()).to(getApp1Exchange()).with(rabbitdeta
 /* Creating a bean for the Message queue Exchange */
 
 @Bean
-
 public TopicExchange getApp2Exchange() {
 
 return new TopicExchange(rabbitdetails.getApp2Exchange());

@@ -72,6 +72,18 @@ public class NoteController {
 		}
 	
 	}
+	@GetMapping(value="/search")
+	public List<Note>searchnote(@RequestHeader String title)
+	{	System.out.println("inside controller");
+		List<Note>notes=noteservice.searchnote(title);
+		if (notes.size()>0) {
+			return notes;
+		
+		} else {
+			return null;
+			}
+	
+	}
 	@GetMapping(value = "/getnotes")
 	public ResponseEntity<Response> getlabel( @RequestHeader String token) {
 		System.out.println("inside controller");

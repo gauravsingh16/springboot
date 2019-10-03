@@ -14,4 +14,6 @@ public interface NoteService {
 	public boolean updatenote(long id, String token, Notedto dto);
 
 	public List<Note> getnotes(String token);
+	
+	public List<Note> searchnote(String title);
 }
