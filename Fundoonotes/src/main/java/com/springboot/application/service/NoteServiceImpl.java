@@ -32,7 +32,9 @@ private ElasticService elasticservice;
 
 	@Override
 	public boolean createnote(String token, Notedto dto) {
-		long id = usertoken.parseToken(token);
+		String token1=token.substring(1,token.length()-1);
+		long id = usertoken.parseToken(token1);
+		System.out.println(id);
 		 UserInfo userInfo =userrepo.findbyId(id);
 		if (userInfo!=null)
 		{
@@ -68,8 +70,9 @@ private ElasticService elasticservice;
 
 	@Override
 	public boolean deletenote(String token, long id) {
+		String token1=token.substring(1,token.length()-1);
 		System.out.println("inside service");
-		long ids=usertoken.parseToken(token);
+		long ids=usertoken.parseToken(token1);
 		UserInfo userinfo=userrepo.findbyId(ids);
 		Object objectid=userinfo.getId();
 		if(userinfo.getNotes().contains(objectid));
@@ -88,8 +91,10 @@ private ElasticService elasticservice;
 	}
 
 	@Override
-	public boolean updatenote(long id, String token, Notedto dto) {
-		long ids=usertoken.parseToken(token);
+	public boolean updatenote(long id,String token, Notedto dto) {
+		String token1=token.substring(1,token.length()-1);
+		long ids=usertoken.parseToken(token1);
+		System.out.println(dto.getTitle());
 		UserInfo userInfo=userrepo.findbyId(ids);
 		if(userInfo!=null)
 		{	System.out.println(userInfo.getId());
@@ -97,6 +102,7 @@ private ElasticService elasticservice;
 			notes.setId(id);
 			notes.setUpdatetime(LocalDateTime.now());
 			
+			System.out.println(notes.getTitle());
 			boolean check=noterepo.updatenote(notes);
 			if(check)
 			{	
@@ -109,16 +115,23 @@ private ElasticService elasticservice;
 	}
 	@Override
 	public List<Note> getnotes(String token) {
-		long id=usertoken.parseToken(token);
-
-		List<Note>notes=noterepo.getnotes(id);
-		notes.stream().sorted((e1,e2)->e2.getCreatetime().compareTo(e1.getCreatetime())).collect(Collectors.toList());
-		return notes;
+		String token1 = token.substring(1, token.length() - 1);
+		long id=usertoken.parseToken(token1);
+		UserInfo userInfo=userrepo.findbyId(id);
+		if(userInfo!=null) {
+			List<Note>notes=noterepo.getnotes(id);
+			notes.stream().filter(data->data.isArchive()==false && !data.isTrash() && !data.isPin()).collect(Collectors.toList());
+			System.out.println(notes.size());
+			return notes;
+		}
+		return null;
 	}
 
 	@Override
-	public List<Note> searchnote(String title) {
-		List<Note> notes=noterepo.getnotebytitle(title);
+	public List<Note> searchnote(String token,String title) {
+		String token1=token.substring(1,token.length()-1);
+		long id=usertoken.parseToken(token1);
+		List<Note> notes=noterepo.getnotebytitle(id,title);
 		if(notes.size()>0)
 		{	List<Note>notes1=elasticservice.searchbytitle(title);
 			return notes1;
@@ -127,4 +140,69 @@ private ElasticService elasticservice;
 	
 	}
 
+	@Override
+	public boolean getarchivednotes(long id,String token) {
+		String token1=token.substring(1,token.length()-1);
+		long id1=usertoken.parseToken(token1);
+		if(userrepo.findbyId(id1)!=null) {
+			Note note=noterepo.getnote(id);
+			if(note!=null)
+			{
+				note.setArchive(!note.isArchive());
+				noterepo.createnote(note);
+				return true;
+			}
+		}		return false;
+	}
+	@Override
+	public List<Note> getarchivenote()
+	{
+		List<Note> notes=noterepo.getarchivenote();
+		return notes;
+	}
+
+	@Override
+	public boolean updatepin(long id, String token) {
+		String token1=token.substring(1,token.length()-1);
+		long id1=usertoken.parseToken(token1);
+		if(userrepo.findbyId(id1)!=null) {
+			Note note=noterepo.getnote(id);
+			if(note!=null)
+			{
+				note.setPin(!note.isPin());
+				noterepo.createnote(note);
+				return true;
+			}
+		}		return false;
+		
+	}
+
+	@Override
+	public List<Note> getpinnote() {
+		List<Note> notes=noterepo.getpinnote();
+		return notes;
+	}
+
+	@Override
+	public boolean updatetrash(long id, String token) {
+		String token1=token.substring(1,token.length()-1);
+		long id1=usertoken.parseToken(token1);
+		if(userrepo.findbyId(id1)!=null) {
+			System.out.println("in if");
+			Note note=noterepo.getnote(id);
+			
+			System.out.println(note.getId());
+			if(note!=null)
+			{	note.setTrash(!note.isTrash());
+				noterepo.createnote(note);
+				return true;
+			}
+		}		return false;
+	}
+
+	@Override
+	public List<Note> gettrashnote() {
+		List<Note> notes=noterepo.gettrashnote();
+		return notes;
+	}
 }

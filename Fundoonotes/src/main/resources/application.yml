@@ -1,0 +1,31 @@
+spring:
+  profiles: Dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/springboot
+    username: ${dbname}
+    password: ${dbpassword}
+     
+  jpa:
+      show-sql: true  
+      hibernate:
+        ddl-auto: update
+      properties:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+  mail: 
+    host: smtp.gmail.com
+    port: 587
+    username: ${username}
+    password: ${password}
+    properties: 
+      smtp: 
+        auth: true
+        starttls:
+          enable:true
+  rabbitmq: 
+    host: 0.0.0.0
+    port: 5672
+    username: ${rabbit_username}
+    password: ${rabbit_password}
+    
+    

@@ -16,8 +16,8 @@ public class Utility {
 		SimpleMailMessage message=new SimpleMailMessage();
 		message.setFrom("gauravpreet.98@gmail.com");
 		message.setTo(email);
-		message.setSubject("accept your token");
-		message.setText(url+token);
+		message.setSubject("verify your account");
+		message.setText(url);
 		mailsender.send(message);
 	}
 }

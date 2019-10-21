@@ -1,14 +1,19 @@
 package com.springboot.application.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 @Entity
@@ -32,7 +37,27 @@ public class Note {
 	private boolean pin;
 	@Column(name="archive")
 	private boolean archive;
+	@Column(name="trash")
+	private boolean trash;
+	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
+	@JoinTable(name="label_note",joinColumns = {@JoinColumn(name="note_id")},inverseJoinColumns= {
+			@JoinColumn(name="labelid")})
+	private List<Note> labelid;
 	
+	public void addnote(Note note)
+	{
+		if(labelid == null)
+		{
+			labelid=new ArrayList<Note>();
+		}
+		labelid.add(note);
+	}
+	public boolean isTrash() {
+		return trash;
+	}
+	public void setTrash(boolean trash) {
+		this.trash = trash;
+	}
 	@OneToMany
 	@JoinColumn(name ="noteId" )
 	private List<Label> label;

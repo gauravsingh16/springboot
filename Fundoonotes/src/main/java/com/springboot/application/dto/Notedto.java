@@ -5,6 +5,20 @@ public class Notedto {
 	private String title;
 	private String desc;
 	private String color;
+	private String archive;
+	private String pin;
+	public String getArchive() {
+		return archive;
+	}
+	public void setArchive(String archive) {
+		this.archive = archive;
+	}
+	public String getPin() {
+		return pin;
+	}
+	public void setPin(String pin) {
+		this.pin = pin;
+	}
 	public String getTitle() {
 		return title;
 	}

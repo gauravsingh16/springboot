@@ -98,13 +98,10 @@ public class UserImplRepo implements UserRepo {
 		return (UserInfo) query1.uniqueResult() ;
 	}
 
-	@SuppressWarnings("deprecation")
 	@Transactional
 	@Override
 	public boolean changepassword(long id,String password) {
 		Session currentsession = entity.unwrap(Session.class);
-		System.out.println(id);
-		System.out.println(password);
 		Query query1= currentsession.createQuery("Update UserInfo set password=:password where id=:id");
 		query1.setParameter("id",id);
 		query1.setParameter("password", password);

@@ -16,13 +16,13 @@ public interface UserService {
 
 	public boolean sendmail(Logindto user);
 
-	public boolean save(Registerdto dto);
+	public boolean save(Registerdto dto,String queue);
 	
 	
 	public boolean verify(String token);
 	
 	public boolean forgetpassword(Logindto user);
 	
-	public boolean changepassword(String token ,String password);
+	public boolean changepassword(long id,Logindto user);
 	
 }

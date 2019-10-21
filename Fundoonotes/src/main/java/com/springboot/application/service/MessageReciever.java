@@ -22,31 +22,31 @@ public class MessageReciever {
 	@Autowired
 	private UserToken tokens;
 	@Autowired
-	private UserImpl userimpl;
-	@RabbitListener
-	public void messagerecieve() {
+	private Utility util;
+
+	public void messagerecieve(String queue) {
 		try {
 			ConnectionFactory factory = new ConnectionFactory();
-			Utility util = new Utility();
+			
 			Connection conn = factory.newConnection();
 			Channel channel = conn.createChannel();
-			channel.queueDeclare("indian_verification", true, false, false, null);
+			channel.queueDeclare(queue, true, false, false, null);
 			DeliverCallback callback = (consumerTag, delivery) -> {
 				String message = new String(delivery.getBody(), "UTF-8");
-				String message1=message.trim();
-				System.out.println("messages" + message1);
+				String message1 = message.substring(1, message.length() - 1);
+				System.out.println("message" + message1);
 				List<UserInfo> info = repo.sendemail(message1);
 				System.out.println(info);
 				for (UserInfo users : info) {
 					System.out.println(users.getId());
 					String token = tokens.tokengenerate(users.getId());
 					System.out.println(token);
-					String url = "http://localhost:8082/user/verify?token=" + token;
-					util.mailsend(url, token, message1);
-					
+					String url = "http://localhost:8082/user/verify?token=" +token;
+					util.mailsend(url,token,message1);
+
 				}
 			};
-			channel.basicConsume("indian_verification", true, callback, consumerTag -> {
+			channel.basicConsume(queue, true, callback, consumerTag -> {
 			});
 		} catch (Exception e) {
 			e.printStackTrace();

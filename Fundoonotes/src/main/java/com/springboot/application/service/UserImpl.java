@@ -5,12 +5,15 @@ import java.util.List;
 import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.springboot.application.config.RabbitConfig;
+import com.springboot.application.config.RedisConfig;
 import com.springboot.application.config.UserToken;
 import com.springboot.application.dto.Logindto;
 import com.springboot.application.dto.Registerdto;
@@ -36,6 +39,8 @@ public class UserImpl implements UserService {
 
 	@Autowired
 	private UserToken usertoken;
+	@Autowired
+	private RedisTemplate< String,Object> redistemplate;
 
 	@Override
 	public long getid(String email) {
@@ -52,14 +57,13 @@ public class UserImpl implements UserService {
 		
 	}
 	@Override
-	public boolean save(Registerdto dto) {
+	public boolean save(Registerdto dto,String queue) {
 		System.out.println(dto.getEmail());
 		UserInfo userinfo = mapper.map(dto, UserInfo.class);
 		userinfo.setPassword(encoder.encode(userinfo.getPassword()));
 		boolean check = userrepo.save(userinfo);
 		if (check) {
-		
-			reciever.messagerecieve();
+			reciever.messagerecieve(queue);
 			return true;
 		}
 		return false;
@@ -78,11 +82,13 @@ public class UserImpl implements UserService {
 		UserInfo userinfo = mapper.map(user, UserInfo.class);
 		System.out.println(user.getEmail());
 		UserInfo info = userrepo.dologin(userinfo.getEmail());
+		System.out.println(info);
 		long ids = info.getId();
 		String token = usertoken.tokengenerate(ids);
+		System.out.println(token+"huiuu");
 		System.out.println(info.getPassword());
 		if (BCrypt.checkpw(user.getPassword(), info.getPassword())) {
-			sendmail(user);
+			System.out.println("matched");
 			return token;
 		}
 		return null;
@@ -125,7 +131,7 @@ public class UserImpl implements UserService {
 		UserInfo userinfo = mapper.map(user, UserInfo.class);
 		UserInfo users = userrepo.forgetpassword(userinfo.getEmail());
 		String token = usertoken.tokengenerate(users.getId());
-		message.setText("click to change password " + token);
+		message.setText("http://localhost:4200/changepassword/"+users.getId());
 		if (user.getEmail().equals(users.getEmail())) {
 			mailsender.send(message);
 			System.out.println("mail sends");
@@ -135,11 +141,8 @@ public class UserImpl implements UserService {
 	}
 
 	@Override
-	public boolean changepassword(String token, String password) {
-		System.out.println(token);
-		System.out.println(password);
-		long id = usertoken.parseToken(token);
-		String newpassword = encoder.encode(password);
+	public boolean changepassword(long id,Logindto user) {
+		String newpassword = encoder.encode(user.getPassword());
 		System.out.println(newpassword);
 		boolean check = userrepo.changepassword(id, newpassword);
 		if (check) {

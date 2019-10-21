@@ -38,7 +38,7 @@ public class UserInfo {
 	@Column(name = "mobileno")
 	private String mobileno;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JoinColumn(name = "userId")
+	@JoinColumn(name = "notesId")
 	private List<Note> notes;
 
 

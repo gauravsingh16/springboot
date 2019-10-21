@@ -14,6 +14,14 @@ public interface NoteRepository {
 	public boolean deletelabel(long id);
 	public boolean updatelabel(Label label);
 	public List<Note>getnotes(long id);
-	public List<Label>gelabel(long id);
-	public List<Note>getnotebytitle(String title);
+	public List<Label>getlabel(long id);
+	public List<Note>getnotebytitle(long id,String title);
+	
+	public List<Note>getarchivenote();
+	Note getnote(long id);
+	public List<Note> getpinnote();
+	public List<Note> gettrashnote();
+	public int addlabelnote(long labelid, long noteid);
+	public int removelabelnote(long labelid, long noteid);
+	public List<Label> findnote(long id);
 }
