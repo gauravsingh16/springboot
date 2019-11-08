@@ -25,13 +25,13 @@ import com.springboot.application.service.LabelService;
 
 @RestController
 @RequestMapping("/label")
-@CrossOrigin(origins="http://localhost:4200",exposedHeaders= {"jwt_token"})
+@CrossOrigin(origins="*",exposedHeaders= {"jwt_token"})
 public class LabelController {
 	
 	@Autowired
 	private LabelService labelservice;
 	@PostMapping(value = "/createlabel")
-	public ResponseEntity<Response> createlabel(@RequestHeader String token,@RequestHeader long id,@RequestBody Labeldto label) {
+	public ResponseEntity<Response> createlabel(@RequestHeader String token,@RequestParam long id,@RequestBody Labeldto label) {
 		boolean check = labelservice.createlabel(token,id, label);
 		if (check) {
 			Response response = new Response("successfull", HttpStatus.OK.value());
@@ -77,7 +77,7 @@ public class LabelController {
 		System.out.println(token);
 		List<Label>labels = labelservice.getlabels(token);
 		if (labels.size()>0) {
-			System.out.println(labels.toString());
+			System.out.println(labels);
 			Response response = new Response("successfull", HttpStatus.OK.value(),labels);
 			return new ResponseEntity<>(response,  HttpStatus.OK);	
 
@@ -91,7 +91,7 @@ public class LabelController {
 	@PostMapping(value= "/labelcreate")
 	public ResponseEntity<Response> addlabel(@RequestHeader String token,@RequestBody Labeldto dto){
 		System.out.println("creation");
-		System.out.println(dto.getName());
+		System.out.println(dto);
 		boolean check=labelservice.labelcreation(token,dto);
 				if(check)
 				{
@@ -104,7 +104,7 @@ public class LabelController {
 				}
 	}
 	@PostMapping(value="/addnotelabel")
-	public ResponseEntity<Response> addnotelabel(@RequestParam long labelid,long noteid,@RequestHeader String token){
+	public ResponseEntity<Response> addnotelabel(@RequestParam long labelid,@RequestParam long noteid,@RequestHeader String token){
 		System.out.println("creation"+labelid);
 		System.out.println(noteid);
 		boolean check=labelservice.addnotelabel(labelid,noteid,token);
@@ -119,7 +119,7 @@ public class LabelController {
 				}
 	}
 	@PostMapping(value="/removenotelabel")
-	public ResponseEntity<Response> removenotelabel(@RequestParam long labelid,long noteid,@RequestHeader String token){
+	public ResponseEntity<Response> removenotelabel(@RequestParam long labelid,@RequestParam long noteid,@RequestHeader String token){
 		System.out.println("creation"+labelid);
 		System.out.println(noteid);
 		boolean check=labelservice.removenotelabel(labelid,noteid,token);

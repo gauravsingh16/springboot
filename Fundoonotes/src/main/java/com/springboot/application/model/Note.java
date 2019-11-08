@@ -1,7 +1,6 @@
 package com.springboot.application.model;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -14,8 +13,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name="note_details")
 public class Note {
@@ -42,25 +42,25 @@ public class Note {
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinTable(name="label_note",joinColumns = {@JoinColumn(name="note_id")},inverseJoinColumns= {
 			@JoinColumn(name="labelid")})
-	private List<Note> labelid;
+	 
+	private List<Label> label;
 	
-	public void addnote(Note note)
-	{
-		if(labelid == null)
-		{
-			labelid=new ArrayList<Note>();
-		}
-		labelid.add(note);
-	}
+//	public void addnote(Note note)
+//	{
+//		if(labelid == null)
+//		{
+//			labelid=new ArrayList<Note>();
+//		}
+//		labelid.add(note);
+//	}
 	public boolean isTrash() {
 		return trash;
 	}
 	public void setTrash(boolean trash) {
 		this.trash = trash;
 	}
-	@OneToMany
-	@JoinColumn(name ="noteId" )
-	private List<Label> label;
+	
+	
 	
 	public List<Label> getLabel() {
 		return label;

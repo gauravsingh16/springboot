@@ -35,6 +35,7 @@ public class LabelServiceImpl implements LabelService{
 			Label info = userconfig.modelMapper().map(dto, Label.class);
              userInfo.getGetManynotes().add(info);
              noteinfo.getLabel().add(info);
+             info.setUserId(id);
               boolean check = noterepo.createlabel(info);
               if (check) {
               	return true;
@@ -80,6 +81,7 @@ public class LabelServiceImpl implements LabelService{
 		{	System.out.println(userInfo.getId());
 			Label labelinfo=userconfig.modelMapper().map(dto,Label.class);
 			labelinfo.setLabelId(id);
+			labelinfo.setUserId(ids);
 			boolean check=noterepo.updatelabel(labelinfo);
 			if(check)
 			{	
@@ -93,19 +95,20 @@ public class LabelServiceImpl implements LabelService{
 
 	@Override
 	public List<Label> getlabels(String token) {
-		String token1 = token.substring(1, token.length() - 1);
-		System.out.println(token1);
-		long id=usertoken.parseToken(token1);
-		
+		System.out.println(token);
+		long id=usertoken.parseToken(token);
+		UserInfo userInfo=userrepo.findbyId(id);
+		//if(userInfo!=null)
 		List<Label>labels=noterepo.getlabel(id);
+		System.out.println("asdad");
 		return labels;
+		
 	}
 
 	@Override
 	public boolean labelcreation(String token, Labeldto dto) {
-		String token1=token.substring(1,token.length()-1);
 		
-		long id=usertoken.parseToken(token1);
+		long id=usertoken.parseToken(token);
 		UserInfo userInfo =userrepo.findbyId(id);
 		
 		if (userInfo!=null)
@@ -123,34 +126,35 @@ public class LabelServiceImpl implements LabelService{
 
 	@Override
 	public boolean addnotelabel(long labelid, long noteid, String token) {
-		String token1=token.substring(1,token.length()-1);
-		long id=usertoken.parseToken(token1);
+		long id=usertoken.parseToken(token);
 		UserInfo user=userrepo.findbyId(id);
 		if(user!=null)
 		{	
-		int check=noterepo.addlabelnote(labelid, noteid);
-		System.out.println("inside addnotelabel.........."+check);
-		if (check>0) {
-			return true;
+		Label labelinfo=noterepo.findlabelbyId(labelid);
+		Note noteinfo=noterepo.findbyId(noteid);
+		labelinfo.getNote().add(noteinfo);
+		noterepo.addlabelnote(labelinfo);
 		}
-		}
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean removenotelabel(long labelid, long noteid, String token) {
-		String token1=token.substring(1,token.length()-1);
-		long id=usertoken.parseToken(token1);
+		long id=usertoken.parseToken(token);
 		UserInfo user=userrepo.findbyId(id);
 		if(user!=null)
 		{	
-		int check=noterepo.removelabelnote(labelid, noteid);
-		System.out.println("inside addnotelabel.........."+check);
-		if (check>0) {
-			return true;
+	    Note note=noterepo.getnote(noteid);
+		Label labelinfo=noterepo.findlabelbyId(labelid);
+		note.getLabel().remove(labelinfo);
+		noterepo.createnote(note);
+		//labelinfo.getNote().clear();
+//		System.out.println("inside addnotelabel.........."+check);
+//		if (check>0) {
+//			return true;
+//		}
 		}
-		}
-		return false;
+		return true;
 		
 	}
 

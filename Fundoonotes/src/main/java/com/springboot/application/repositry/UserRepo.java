@@ -2,7 +2,6 @@ package com.springboot.application.repositry;
 
 import java.util.List;
 
-import com.springboot.application.model.Note;
 import com.springboot.application.model.UserInfo;
 
 public interface UserRepo {

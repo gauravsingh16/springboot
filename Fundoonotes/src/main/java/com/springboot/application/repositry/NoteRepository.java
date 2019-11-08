@@ -17,11 +17,12 @@ public interface NoteRepository {
 	public List<Label>getlabel(long id);
 	public List<Note>getnotebytitle(long id,String title);
 	
-	public List<Note>getarchivenote();
+	public List<Note>getarchivenote(long id);
 	Note getnote(long id);
-	public List<Note> getpinnote();
-	public List<Note> gettrashnote();
-	public int addlabelnote(long labelid, long noteid);
+	public Label findlabelbyId(long id);
+	public List<Note> getpinnote(long id);
+	public List<Note> gettrashnote(long id);
+	public void addlabelnote(Label labelinfo);
 	public int removelabelnote(long labelid, long noteid);
 	public List<Label> findnote(long id);
 }

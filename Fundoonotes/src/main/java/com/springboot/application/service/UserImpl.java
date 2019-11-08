@@ -5,15 +5,12 @@ import java.util.List;
 import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.springboot.application.config.RabbitConfig;
-import com.springboot.application.config.RedisConfig;
 import com.springboot.application.config.UserToken;
 import com.springboot.application.dto.Logindto;
 import com.springboot.application.dto.Registerdto;
@@ -39,8 +36,6 @@ public class UserImpl implements UserService {
 
 	@Autowired
 	private UserToken usertoken;
-	@Autowired
-	private RedisTemplate< String,Object> redistemplate;
 
 	@Override
 	public long getid(String email) {
@@ -89,6 +84,7 @@ public class UserImpl implements UserService {
 		System.out.println(info.getPassword());
 		if (BCrypt.checkpw(user.getPassword(), info.getPassword())) {
 			System.out.println("matched");
+			
 			return token;
 		}
 		return null;
@@ -131,7 +127,7 @@ public class UserImpl implements UserService {
 		UserInfo userinfo = mapper.map(user, UserInfo.class);
 		UserInfo users = userrepo.forgetpassword(userinfo.getEmail());
 		String token = usertoken.tokengenerate(users.getId());
-		message.setText("http://localhost:4200/changepassword/"+users.getId());
+		message.setText("http://localhost:3000/changepassword/"+users.getId());
 		if (user.getEmail().equals(users.getEmail())) {
 			mailsender.send(message);
 			System.out.println("mail sends");

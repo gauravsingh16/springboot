@@ -32,8 +32,8 @@ private ElasticService elasticservice;
 
 	@Override
 	public boolean createnote(String token, Notedto dto) {
-		String token1=token.substring(1,token.length()-1);
-		long id = usertoken.parseToken(token1);
+		long id = usertoken.parseToken(token);
+		System.out.println(dto.getTitle());
 		System.out.println(id);
 		 UserInfo userInfo =userrepo.findbyId(id);
 		if (userInfo!=null)
@@ -50,6 +50,7 @@ private ElasticService elasticservice;
             	   try {
             		   System.out.println(info);
        			String check1=elasticservice.CreateNote(info);
+       			
        			System.out.println(check1);
        			} catch (Exception e) {
        				e.printStackTrace();
@@ -70,9 +71,8 @@ private ElasticService elasticservice;
 
 	@Override
 	public boolean deletenote(String token, long id) {
-		String token1=token.substring(1,token.length()-1);
 		System.out.println("inside service");
-		long ids=usertoken.parseToken(token1);
+		long ids=usertoken.parseToken(token);
 		UserInfo userinfo=userrepo.findbyId(ids);
 		Object objectid=userinfo.getId();
 		if(userinfo.getNotes().contains(objectid));
@@ -92,8 +92,7 @@ private ElasticService elasticservice;
 
 	@Override
 	public boolean updatenote(long id,String token, Notedto dto) {
-		String token1=token.substring(1,token.length()-1);
-		long ids=usertoken.parseToken(token1);
+		long ids=usertoken.parseToken(token);
 		System.out.println(dto.getTitle());
 		UserInfo userInfo=userrepo.findbyId(ids);
 		if(userInfo!=null)
@@ -115,10 +114,12 @@ private ElasticService elasticservice;
 	}
 	@Override
 	public List<Note> getnotes(String token) {
-		String token1 = token.substring(1, token.length() - 1);
-		long id=usertoken.parseToken(token1);
+		
+		System.out.println(token);
+		long id=usertoken.parseToken(token);
 		UserInfo userInfo=userrepo.findbyId(id);
 		if(userInfo!=null) {
+			System.out.println(userInfo);
 			List<Note>notes=noterepo.getnotes(id);
 			notes.stream().filter(data->data.isArchive()==false && !data.isTrash() && !data.isPin()).collect(Collectors.toList());
 			System.out.println(notes.size());
@@ -141,9 +142,8 @@ private ElasticService elasticservice;
 	}
 
 	@Override
-	public boolean getarchivednotes(long id,String token) {
-		String token1=token.substring(1,token.length()-1);
-		long id1=usertoken.parseToken(token1);
+	public boolean archivednotes(long id,String token) {
+		long id1=usertoken.parseToken(token);
 		if(userrepo.findbyId(id1)!=null) {
 			Note note=noterepo.getnote(id);
 			if(note!=null)
@@ -155,16 +155,21 @@ private ElasticService elasticservice;
 		}		return false;
 	}
 	@Override
-	public List<Note> getarchivenote()
+	public List<Note> getarchivenote(String token)
 	{
-		List<Note> notes=noterepo.getarchivenote();
-		return notes;
+		long id=usertoken.parseToken(token);
+		if(userrepo.findbyId(id)!=null)
+		{
+			List<Note> notes=noterepo.getarchivenote(id);
+			return notes;
+		
+		}
+		return null;
 	}
 
 	@Override
 	public boolean updatepin(long id, String token) {
-		String token1=token.substring(1,token.length()-1);
-		long id1=usertoken.parseToken(token1);
+		long id1=usertoken.parseToken(token);
 		if(userrepo.findbyId(id1)!=null) {
 			Note note=noterepo.getnote(id);
 			if(note!=null)
@@ -178,15 +183,20 @@ private ElasticService elasticservice;
 	}
 
 	@Override
-	public List<Note> getpinnote() {
-		List<Note> notes=noterepo.getpinnote();
-		return notes;
+	public List<Note> getpinnote(String token) {
+		long id=usertoken.parseToken(token);
+		if(userrepo.findbyId(id)!=null)
+		{
+			List<Note> notes=noterepo.getpinnote(id);
+			return notes;
+		
+		}
+		return null;
 	}
 
 	@Override
 	public boolean updatetrash(long id, String token) {
-		String token1=token.substring(1,token.length()-1);
-		long id1=usertoken.parseToken(token1);
+		long id1=usertoken.parseToken(token);
 		if(userrepo.findbyId(id1)!=null) {
 			System.out.println("in if");
 			Note note=noterepo.getnote(id);
@@ -201,8 +211,16 @@ private ElasticService elasticservice;
 	}
 
 	@Override
-	public List<Note> gettrashnote() {
-		List<Note> notes=noterepo.gettrashnote();
-		return notes;
+	public List<Note> gettrashnote(String token) {
+		long id=usertoken.parseToken(token);
+		if(userrepo.findbyId(id)!=null)
+		{
+			List<Note> notes=noterepo.gettrashnote(id);
+			System.out.println("with trash");
+			return notes;
+		}
+		System.out.println("without trash");
+		return null;
 	}
+	
 }

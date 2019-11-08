@@ -16,17 +16,17 @@ public interface NoteService {
 	public List<Note> getnotes(String token);
 	
 	public List<Note> searchnote(String token,String title);
-	public boolean getarchivednotes(long id,String token);
+	public boolean archivednotes(long id,String token);
 
-	List<Note> getarchivenote();
+	List<Note> getarchivenote(String token);
 
 	public boolean updatepin(long id, String token);
 
-	public List<Note> getpinnote();
+	public List<Note> getpinnote(String token);
 
 	public boolean updatetrash(long id, String token);
 
-	public List<Note> gettrashnote();
+	public List<Note> gettrashnote(String token);
 	
 	
 }

@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.springboot.application.dto.Logindto;
-import com.springboot.application.dto.Rabbituserdto;
 import com.springboot.application.dto.Registerdto;
 import com.springboot.application.exceptions.Response;
 import com.springboot.application.model.RabbitDetails;
@@ -30,7 +29,7 @@ import com.springboot.application.service.UserService;
 
 @RestController
 @RequestMapping("/user")
-@CrossOrigin(origins="http://localhost:4200",exposedHeaders= {"jwt_token"})
+@CrossOrigin(origins="*",exposedHeaders= {"jwt_token"})
 public class UserController {
 
 //	private static final Logger log = LoggerFactory.getLogger(MessageService.class);
@@ -107,6 +106,7 @@ public class UserController {
 		System.out.println("12131321");
 		System.out.println(user.getEmail());
 		String check = userservice.dologin(user);
+		System.out.println(check);
 		// long ids=userservice.getid(user.getEmail());
 		if (!(check==null)) {
 			System.out.println("hello");

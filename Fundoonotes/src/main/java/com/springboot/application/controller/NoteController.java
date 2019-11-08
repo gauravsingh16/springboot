@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,7 @@ import com.springboot.application.model.Note;
 import com.springboot.application.service.NoteService;
 @RestController
 @RequestMapping("/note")
-@CrossOrigin(origins="http://localhost:4200",exposedHeaders= {"jwt_token"})
+@CrossOrigin(origins="*",exposedHeaders= {"jwt_token"})
 public class NoteController {
 	
 	@Autowired
@@ -96,10 +95,10 @@ public class NoteController {
 	
 	
 
-	@PostMapping(value="/archivednotes")
+	@PutMapping(value="/archivednotes")
 	public ResponseEntity<Response> updatearchive(@RequestParam long id, @RequestHeader String token)
 	{	System.out.println("insidde");
-		boolean check=noteservice.getarchivednotes(id,token);
+		boolean check=noteservice.archivednotes(id,token);
 		if(check)
 		{
 			Response response = new Response("successfull", HttpStatus.OK.value());
@@ -112,11 +111,11 @@ public class NoteController {
 	@GetMapping(value="/getarchivednotes")
 	public ResponseEntity<Response> getarchive(@RequestHeader String token)
 	{
-		List<Note>note=noteservice.getarchivenote();
+		List<Note>note=noteservice.getarchivenote(token);
 		if(note.size()>0)
 		{
 
-			Response response = new Response("successfull", HttpStatus.OK.value());
+			Response response = new Response("successfull", HttpStatus.OK.value(),note);
 			return new ResponseEntity<>(response,  HttpStatus.OK);
 		
 		}else
@@ -144,10 +143,10 @@ public class NoteController {
 	@GetMapping(value="/getpinnotes")
 	public ResponseEntity<Response> getpin(@RequestHeader String token)
 	{
-		List<Note>note=noteservice.getpinnote();
+		List<Note>note=noteservice.getpinnote(token);
 		if(note.size()>0)
 		{
-			Response response = new Response("successfull", HttpStatus.OK.value());
+			Response response = new Response("successfull", HttpStatus.OK.value(),note);
 			return new ResponseEntity<>(response,  HttpStatus.OK);
 		}else
 		{
@@ -156,7 +155,7 @@ public class NoteController {
 	
 		}
 	}
-	@PostMapping(value="/trashnotes")
+	@PutMapping(value="/trashnotes")
 	public ResponseEntity<Response> updatetrash(@RequestParam Long id, @RequestHeader String token)
 	{	System.out.println("insidde");
 		boolean check=noteservice.updatetrash(id,token);
@@ -172,7 +171,7 @@ public class NoteController {
 	@GetMapping(value="/gettrashnotes")
 	public ResponseEntity<Response> gettrashnote(@RequestHeader String token)
 	{
-		List<Note>note=noteservice.gettrashnote();
+		List<Note>note=noteservice.gettrashnote(token);
 		if(note.size()>0)
 		{
 			Response response = new Response("successfull", HttpStatus.OK.value(),note);
@@ -185,7 +184,7 @@ public class NoteController {
 	
 	}
 	@GetMapping(value ="/getnotes")
-	public ResponseEntity<Response> getlabel( @RequestHeader String token) {
+	public ResponseEntity<Response> getnotes( @RequestHeader String token) {
 		System.out.println("inside controller");
 		System.out.println(token);
 		List<Note>notes = noteservice.getnotes(token);

@@ -62,6 +62,14 @@ private EntityManager entity;
 	}
 	@Override
 	@Transactional
+	public Label findlabelbyId(long id) {
+		Session currentsession = entity.unwrap(Session.class);
+		Query query1 = currentsession.createQuery("from Label where labelId=:id");
+		query1.setParameter("id",id);
+		return (Label) query1.uniqueResult() ;
+	}
+	@Override
+	@Transactional
 	public boolean deletelabel(long id) {
 		System.out.println(id);
 		Session currentsession = entity.unwrap(Session.class);
@@ -83,7 +91,7 @@ private EntityManager entity;
 	@Transactional
 	public List<Note> getnotes(long userid) {
 		Session currentsession = entity.unwrap(Session.class);
-		List<Note> notes=currentsession.createQuery("from Note where archive=false and pin=false and trash=false").getResultList();
+		List<Note> notes=currentsession.createQuery("from Note where user_id='"+userid+"'and archive=false and pin=false and trash=false").getResultList();
 		return notes;
 	}
 	@Override
@@ -91,7 +99,7 @@ private EntityManager entity;
 	public List<Label> getlabel(long userid) {
 		System.out.println(userid);
 		Session currentsession=entity.unwrap(Session.class);
-		List<Label> labels=currentsession.createQuery("from Label").list();
+		List<Label> labels=currentsession.createQuery("from Label where userId='"+userid+"'").list();
 		System.out.println(labels.toString());
 		currentsession.close();
 		return labels;
@@ -114,31 +122,33 @@ private EntityManager entity;
  	
 	@Override
 	
-	public List<Note> getarchivenote() {
+	public List<Note> getarchivenote(long id) {
+		System.out.println("in repo");
 		Session currentsession=entity.unwrap(Session.class);
-		List<Note>notes=currentsession.createQuery("from Note where archive=true and pin=false and trash=false").getResultList();
+		List<Note>notes=currentsession.createQuery("from Note where user_id='"+id+"' and archive=true and pin=false and trash=false").getResultList();
+		System.out.println(notes);
 		return notes;
 	}
 	@Override
 	
-	public List<Note> getpinnote() {
+	public List<Note> getpinnote(long id) {
 		Session currentsession=entity.unwrap(Session.class);
-		List<Note>notes=currentsession.createQuery("from Note where pin=true and trash=false and archive=false").getResultList();
+		List<Note>notes=currentsession.createQuery("from Note where user_id='"+id+"'and pin=true and trash=false and archive=false").getResultList();
 		return notes;
 	}
 	@Override
 	
-	public List<Note> gettrashnote() {
+	public List<Note> gettrashnote(long id) {
 		Session currentsession=entity.unwrap(Session.class);
-		List<Note>notes=currentsession.createQuery("from Note where trash=true and pin=false and archive=false").getResultList();
+		List<Note>notes=currentsession.createQuery("from Note where user_id='"+id+"'and trash=true and pin=false and archive=false").getResultList();
 		return notes;
 		
 	}
 	@Override
 	@Transactional
-	public int addlabelnote(long labelid, long noteid) {
+	public void addlabelnote(Label labelinfo) {
 		Session currentsession=entity.unwrap(Session.class);
-	 return currentsession.createQuery("update Label set note_id="+noteid+" where labelid="+labelid).executeUpdate();
+		currentsession.save(labelinfo);
 		
 	}
 	@Override
