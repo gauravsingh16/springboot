@@ -15,6 +15,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name="note_details")
@@ -39,13 +42,23 @@ public class Note {
 	private boolean archive;
 	@Column(name="trash")
 	private boolean trash;
+	@Column(name="reminder")
+	@DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)
+	private LocalDateTime reminder;
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinTable(name="label_note",joinColumns = {@JoinColumn(name="note_id")},inverseJoinColumns= {
 			@JoinColumn(name="labelid")})
 	 
 	private List<Label> label;
 	
-//	public void addnote(Note note)
+	
+public LocalDateTime getReminder() {
+		return reminder;
+	}
+	public void setReminder(LocalDateTime reminder) {
+		this.reminder = reminder;
+	}
+	//	public void addnote(Note note)
 //	{
 //		if(labelid == null)
 //		{

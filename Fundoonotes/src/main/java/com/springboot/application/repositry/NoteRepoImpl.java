@@ -37,11 +37,10 @@ private EntityManager entity;
 	
 	@Transactional
 	@Override
-	public boolean updatenote(Note note) {
+	public boolean updatenote(long id) {
 		Session currentsession = entity.unwrap(Session.class);
-		System.out.println(note.getTitle());
-//		 currentsession.createQuery("update from Note set desc='"+ note.getDesc()+"'where title='"+note.getTitle()+"'").setParameter("desc",note.getDesc()).setParameter("title",note.getTitle() 	).executeUpdate();
-		currentsession.saveOrUpdate(note);	
+		currentsession.createQuery("update from Note where where id='"+id+"'"	).executeUpdate();
+		//currentsession.saveOrUpdate(note);	
 		return true;
 	}
 	@Transactional
@@ -165,4 +164,12 @@ private EntityManager entity;
 		 List<Label> note=currentsession.createQuery("from Label where labelid="+id).getResultList();
 		 return note;
 	}
+	@Override
+	public List<Note> getremindernote(long id) {
+		System.out.println(id);
+		Session currentsession=entity.unwrap(Session.class);
+		 List<Note> note=currentsession.createQuery("from Note where user_id='"+id+"'and reminder!='"+null+"'").getResultList();
+		 return note;
+	}
+	
 }

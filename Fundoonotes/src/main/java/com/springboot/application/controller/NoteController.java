@@ -199,7 +199,71 @@ public class NoteController {
 
 		}
 	}
-	
+	@PostMapping(value ="/doreminder")
+	public ResponseEntity<Response> doreminder(@RequestParam long id,@RequestBody Notedto dto ,@RequestHeader String token) {
+		System.out.println("inside controller");
+		System.out.println(token);
+		boolean notes = noteservice.doreminder(id,dto,token);
+		if (notes) {
+			System.out.println(notes);
+			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} else {
+			Response response1 = new Response("not successful", HttpStatus.BAD_REQUEST.value());
+			return new ResponseEntity<>(response1, HttpStatus.BAD_REQUEST);
+
+		}
+	}
+	@DeleteMapping(value ="/removereminder")
+	public ResponseEntity<Response> removereminder(@RequestParam long id,@RequestHeader String token) {
+		System.out.println("inside controller");
+		System.out.println(token);
+		boolean notes = noteservice.removereminder(id,token);
+		if (notes) {
+			System.out.println(notes);
+			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} else {
+			Response response1 = new Response("not successful", HttpStatus.BAD_REQUEST.value());
+			return new ResponseEntity<>(response1, HttpStatus.BAD_REQUEST);
+
+		}
+	}
+	@GetMapping(value ="/getremindernotes")
+	public ResponseEntity<Response> remindernotes(@RequestHeader String token) {
+		System.out.println("inside controller");
+		System.out.println(token);
+		List<Note> notes = noteservice.remindernotes(token);
+		if (notes.size()>0) {
+			System.out.println(notes);
+			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} else {
+			Response response1 = new Response("not successful", HttpStatus.BAD_REQUEST.value());
+			return new ResponseEntity<>(response1, HttpStatus.BAD_REQUEST);
+
+		}
+	}
+	@PutMapping(value ="/changecolor")
+	public ResponseEntity<Response> changecolor(@RequestParam long id,@RequestBody Notedto dto,@RequestHeader String token) {
+		System.out.println("inside controller");
+		System.out.println(token);
+		boolean notes = noteservice.changecolor(id,dto,token);
+		if (notes) {
+			System.out.println(notes);
+			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} else {
+			Response response1 = new Response("not successful", HttpStatus.BAD_REQUEST.value());
+			return new ResponseEntity<>(response1, HttpStatus.BAD_REQUEST);
+
+		}
+	}
+		
 	
 	
 	

@@ -42,9 +42,10 @@ public class LabelController {
 		}
 	}
 
-	@DeleteMapping(value = "/deletelabel/{id}")
-	public ResponseEntity<Response> deletelabel(@PathVariable(value = "id") long id, @RequestHeader String token) {
+	@DeleteMapping(value = "/deletelabel")
+	public ResponseEntity<Response> deletelabel(@RequestParam("labelid") long id, @RequestHeader String token) {
 		System.out.println("inside controller");
+		System.out.println(id);
 		boolean check = labelservice.deletelabel(token, id);
 		
 		if (check) {

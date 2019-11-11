@@ -8,7 +8,7 @@ import com.springboot.application.model.Note;
 public interface NoteRepository {
 	public boolean createnote(Note note);
 	public boolean deletenote(long id);
-	public boolean updatenote(Note note);
+	public boolean updatenote(long id);
 	public boolean createlabel(Label label);
 	public Note findbyId(long id);
 	public boolean deletelabel(long id);
@@ -25,4 +25,5 @@ public interface NoteRepository {
 	public void addlabelnote(Label labelinfo);
 	public int removelabelnote(long labelid, long noteid);
 	public List<Label> findnote(long id);
+	public List<Note> getremindernote(long id);
 }

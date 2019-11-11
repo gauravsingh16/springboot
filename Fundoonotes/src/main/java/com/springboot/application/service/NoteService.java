@@ -27,6 +27,15 @@ public interface NoteService {
 	public boolean updatetrash(long id, String token);
 
 	public List<Note> gettrashnote(String token);
+
+	public boolean doreminder(long id,Notedto dto, String token);
+
+	public boolean removereminder(long id, String token);
+
+	public List<Note> remindernotes(String token);
+
+	public boolean changecolor(long id, Notedto dto, String token);
+
 	
 	
 }

@@ -56,13 +56,8 @@ public class LabelServiceImpl implements LabelService{
 		System.out.println("inside service");
 		long ids=usertoken.parseToken(token);
 		UserInfo userinfo=userrepo.findbyId(ids);
-		Note noteinfo=noterepo.findbyId(id);
-		Object objectuserid=userinfo.getId();
-		Object objectnoteid=noteinfo.getId();
 		
-		if(userinfo.getGetManynotes().contains(objectuserid)&& noteinfo.getLabel().contains(objectnoteid));
-		{
-			System.out.println("inside if");
+		System.out.println("inside if");
 		boolean check=noterepo.deletelabel(id);
 		if(check)
 		{
@@ -71,7 +66,7 @@ public class LabelServiceImpl implements LabelService{
 		{
 			return false;
 		}
-	}
+	
 	}
 	@Override
 	public boolean updatelabel(long id, String token, Labeldto dto) {

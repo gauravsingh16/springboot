@@ -97,12 +97,17 @@ private ElasticService elasticservice;
 		UserInfo userInfo=userrepo.findbyId(ids);
 		if(userInfo!=null)
 		{	System.out.println(userInfo.getId());
-			Note notes=mapper.map(dto,Note.class);
-			notes.setId(id);
+			Note notes=noterepo.findbyId(id);
+			
+			System.out.println(dto.getTitle());
+			notes.setTitle(dto.getTitle());
+			notes.setDesc(dto.getDesc());
+			System.out.println(dto.getReminder());
+			notes.setReminder(dto.getReminder());
 			notes.setUpdatetime(LocalDateTime.now());
 			
 			System.out.println(notes.getTitle());
-			boolean check=noterepo.updatenote(notes);
+			boolean check=noterepo.createnote(notes);
 			if(check)
 			{	
 				return true;
@@ -222,5 +227,75 @@ private ElasticService elasticservice;
 		System.out.println("without trash");
 		return null;
 	}
+
+	@Override
+	public boolean doreminder(long id,Notedto dto, String token) {
+		long ids=usertoken.parseToken(token);
+		if(userrepo.findbyId(ids)!=null)
+		{
+			Note noteinfo= noterepo.findbyId(id);
+			noteinfo.setReminder(dto.getReminder());
+			if(noterepo.createnote(noteinfo)) {
+				System.out.println("with reminder");
+				return true;	
+			}
+			
+		}
+		System.out.println("without reminder");
+			
+		return false;
+	}
+
+	@Override
+	public boolean removereminder(long id, String token) {
+		long ids=usertoken.parseToken(token);
+		if(userrepo.findbyId(ids)!=null)
+		{
+			Note noteinfo= noterepo.findbyId(id);
+			noteinfo.setReminder(null);
+			if(noterepo.createnote(noteinfo)) {
+				System.out.println("with reminder");
+				return true;	
+			}
+			
+		}
+		System.out.println("without reminder");
+			
+		return false;
 	
+		
+	}
+
+	@Override
+	public List<Note> remindernotes(String token) {
+		long ids=usertoken.parseToken(token);
+		if(userrepo.findbyId(ids)!=null)
+		{
+			List<Note>notes=noterepo.getremindernote(ids);
+			if(notes.size()>0)
+			{
+				return notes;
+			}
+			return null;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean changecolor(long id, Notedto dto, String token) {
+		long ids=usertoken.parseToken(token);
+		if(userrepo.findbyId(ids)!=null)
+		{
+			Note noteinfo= noterepo.findbyId(id);
+			noteinfo.setColor(dto.getColor());
+			if(noterepo.createnote(noteinfo)) {
+				System.out.println("with color");
+				return true;	
+			}
+			
+		}
+		System.out.println("without color");
+			
+		return false;
+	}
 }

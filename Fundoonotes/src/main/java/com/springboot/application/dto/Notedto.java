@@ -1,5 +1,9 @@
 package com.springboot.application.dto;
 
+import java.time.LocalDateTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Notedto {
 
 	private String title;
@@ -7,6 +11,14 @@ public class Notedto {
 	private String color;
 	private String archive;
 	private String pin;
+	@DateTimeFormat(iso=DateTimeFormat.ISO.DATE_TIME)
+	private LocalDateTime reminder;
+	public LocalDateTime getReminder() {
+		return reminder;
+	}
+	public void setReminder(LocalDateTime reminder) {
+		this.reminder = reminder;
+	}
 	public String getArchive() {
 		return archive;
 	}
