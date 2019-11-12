@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.springboot.application.dto.Notedto;
 import com.springboot.application.model.Note;
+import com.springboot.application.model.UserInfo;
 
 public interface NoteService {
 
@@ -35,6 +36,12 @@ public interface NoteService {
 	public List<Note> remindernotes(String token);
 
 	public boolean changecolor(long id, Notedto dto, String token);
+
+	public boolean doCollab(long id, String email, String token);
+
+	public List<UserInfo> getCollab(long id, String token);
+
+	public boolean deleteCollab(long noteid, long userid, String token);
 
 	
 	

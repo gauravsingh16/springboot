@@ -41,10 +41,9 @@ public class UserImplRepo implements UserRepo {
 	@SuppressWarnings("deprecation")
 	@Transactional
 	@Override
-	public List<UserInfo> getid(String email) {
+	public List<UserInfo> getuser(long id) {
 		Session currentsession = entity.unwrap(Session.class);
-		List<UserInfo> query1 = currentsession.createQuery("from UserInfo where email=:email").getResultList();
-		
+		List<UserInfo> query1 = currentsession.createQuery("from UserInfo where id=:id").setParameter("id",id).getResultList();
 		return  query1;
 	}
 
@@ -116,6 +115,15 @@ public class UserImplRepo implements UserRepo {
 		Query query1 = currentsession.createQuery("from UserInfo where id=:id");
 		query1.setParameter("id",id);
 		return (UserInfo) query1.uniqueResult() ;
+	}
+
+	@Override
+	public UserInfo findbyemail(String email) {
+		Session currentsession = entity.unwrap(Session.class);
+		Query query1 = currentsession.createQuery("from UserInfo where email=:email");
+		query1.setParameter("email",email);
+		return (UserInfo) query1.uniqueResult() ;
+		
 	}
 	
 

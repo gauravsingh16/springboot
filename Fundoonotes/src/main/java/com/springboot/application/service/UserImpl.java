@@ -1,5 +1,6 @@
 package com.springboot.application.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.logging.Logger;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.springboot.application.config.UserToken;
 import com.springboot.application.dto.Logindto;
 import com.springboot.application.dto.Registerdto;
+import com.springboot.application.model.Login;
 import com.springboot.application.model.UserInfo;
 import com.springboot.application.repositry.UserRepo;
 
@@ -38,18 +40,15 @@ public class UserImpl implements UserService {
 	private UserToken usertoken;
 
 	@Override
-	public long getid(String email) {
-		// UserInfo userinfo = mapper.map(email, UserInfo.class);
-		List<UserInfo> info = userrepo.getid(email);
-		for(UserInfo user:info)
-		{
-			if(user.getId()>0);
-			{
-				return user.getId();
-			}
+	public List<UserInfo> getuser(String token) {
+		long id=usertoken.parseToken(token);
+		UserInfo userinfo=userrepo.findbyId(id);
+		if(userinfo!=null) {
+		List<UserInfo> info = userrepo.getuser(id);
+			
+		return info;
 		}
-		return 0;
-		
+		return null;
 	}
 	@Override
 	public boolean save(Registerdto dto,String queue) {
@@ -73,7 +72,7 @@ public class UserImpl implements UserService {
 	
 
 	@Override
-	public String dologin(Logindto user) {
+	public Login dologin(Logindto user) {
 		UserInfo userinfo = mapper.map(user, UserInfo.class);
 		System.out.println(user.getEmail());
 		UserInfo info = userrepo.dologin(userinfo.getEmail());
@@ -84,8 +83,10 @@ public class UserImpl implements UserService {
 		System.out.println(info.getPassword());
 		if (BCrypt.checkpw(user.getPassword(), info.getPassword())) {
 			System.out.println("matched");
-			
-			return token;
+		Login login=new Login();
+		login.setToken(token);
+		login.setEmail(info.getEmail());
+		return login;
 		}
 		return null;
 	}

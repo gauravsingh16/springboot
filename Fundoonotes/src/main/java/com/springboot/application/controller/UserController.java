@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.application.dto.Logindto;
 import com.springboot.application.dto.Registerdto;
 import com.springboot.application.exceptions.Response;
+import com.springboot.application.model.Login;
 import com.springboot.application.model.RabbitDetails;
 import com.springboot.application.model.UserInfo;
 import com.springboot.application.service.MessageSender;
@@ -94,10 +96,11 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/searchuser")
-	public long getuserbyemail(@RequestParam String email) {
-		long id = userservice.getid(email);
-		System.out.println(email);
-		return id;
+	public ResponseEntity<Response> getuser(@RequestHeader String token) {
+		List<UserInfo> user = userservice.getuser(token);
+		System.out.println(token);
+		Response response=new Response("succesfull", HttpStatus.OK.value(),user);
+		return new ResponseEntity<Response>(response,HttpStatus.OK);
 
 	}
 
@@ -105,10 +108,10 @@ public class UserController {
 	public ResponseEntity<Response> dologin(@RequestBody Logindto user) {
 		System.out.println("12131321");
 		System.out.println(user.getEmail());
-		String check = userservice.dologin(user);
+		Login check = userservice.dologin(user);
 		System.out.println(check);
 		// long ids=userservice.getid(user.getEmail());
-		if (!(check==null)) {
+		if (check!=null) {
 			System.out.println("hello");
 			Response response = new Response("successful", HttpStatus.OK.value(),check);
 			return new ResponseEntity<>(response, HttpStatus.OK);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.springboot.application.model.Label;
 import com.springboot.application.model.Note;
+import com.springboot.application.model.UserInfo;
 
 public interface NoteRepository {
 	public boolean createnote(Note note);
@@ -26,4 +27,5 @@ public interface NoteRepository {
 	public int removelabelnote(long labelid, long noteid);
 	public List<Label> findnote(long id);
 	public List<Note> getremindernote(long id);
+	public List<Note>getcollab(long id);
 }

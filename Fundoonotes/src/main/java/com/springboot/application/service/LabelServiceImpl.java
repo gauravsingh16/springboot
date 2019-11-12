@@ -155,8 +155,7 @@ public class LabelServiceImpl implements LabelService{
 
 	@Override
 	public List<Label> getnote(long labelid, String token) {
-		String token1=token.substring(1,token.length()-1);
-		long id=usertoken.parseToken(token1);
+		long id=usertoken.parseToken(token);
 		UserInfo user=userrepo.findbyId(id);
 		if(user!=null)
 		{

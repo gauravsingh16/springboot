@@ -18,6 +18,8 @@ import javax.persistence.Table;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 @Table(name="note_details")
@@ -48,10 +50,19 @@ public class Note {
 	@ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
 	@JoinTable(name="label_note",joinColumns = {@JoinColumn(name="note_id")},inverseJoinColumns= {
 			@JoinColumn(name="labelid")})
-	 
 	private List<Label> label;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name="user_note",joinColumns = {@JoinColumn(name="note_id")},inverseJoinColumns= {
+			@JoinColumn(name="userId")})
+	 @JsonIgnore
+	private List<UserInfo> user;
 	
-	
+public List<UserInfo> getUser() {
+		return user;
+	}
+	public void setUser(List<UserInfo> user) {
+		this.user = user;
+	}
 public LocalDateTime getReminder() {
 		return reminder;
 	}

@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.springboot.application.dto.Notedto;
 import com.springboot.application.exceptions.Response;
 import com.springboot.application.model.Note;
+import com.springboot.application.model.UserInfo;
 import com.springboot.application.service.NoteService;
 @RestController
 @RequestMapping("/note")
@@ -242,8 +243,8 @@ public class NoteController {
 			return new ResponseEntity<>(response, HttpStatus.OK);
 
 		} else {
-			Response response1 = new Response("not successful", HttpStatus.BAD_REQUEST.value());
-			return new ResponseEntity<>(response1, HttpStatus.BAD_REQUEST);
+			Response response1 = new Response("not successful", HttpStatus.OK.value());
+			return new ResponseEntity<>(response1, HttpStatus.OK);
 
 		}
 	}
@@ -252,6 +253,54 @@ public class NoteController {
 		System.out.println("inside controller");
 		System.out.println(token);
 		boolean notes = noteservice.changecolor(id,dto,token);
+		if (notes) {
+			System.out.println(notes);
+			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} else {
+			Response response1 = new Response("not successful", HttpStatus.BAD_REQUEST.value());
+			return new ResponseEntity<>(response1, HttpStatus.BAD_REQUEST);
+
+		}
+	}
+	@PostMapping(value ="/docollaborator")
+	public ResponseEntity<Response> docollaborator(@RequestParam("id") long id,@RequestParam("email") String email,@RequestHeader String token) {
+		System.out.println("inside controller");
+		System.out.println(token);
+		boolean notes = noteservice.doCollab(id,email,token);
+		if (notes) {
+			System.out.println(notes);
+			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} else {
+			Response response1 = new Response("not successful", HttpStatus.BAD_REQUEST.value());
+			return new ResponseEntity<>(response1, HttpStatus.BAD_REQUEST);
+
+		}
+	}	
+	@GetMapping(value ="/getcollaborator")
+	public ResponseEntity<Response> getcollaborator(@RequestParam long id,@RequestHeader String token) {
+		System.out.println("inside controller");
+		System.out.println(token);
+		List<UserInfo> notes = noteservice.getCollab(id,token);
+		if (notes.size()>0) {
+			System.out.println(notes);
+			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
+			return new ResponseEntity<>(response, HttpStatus.OK);
+
+		} else {
+			Response response1 = new Response("not successful", HttpStatus.OK.value(),notes);
+			return new ResponseEntity<>(response1, HttpStatus.OK);
+
+		}
+	}
+	@DeleteMapping(value ="/deletecollaborator")
+	public ResponseEntity<Response> deletecollaborator(@RequestParam long noteid,@RequestParam long userid,@RequestHeader String token) {
+		System.out.println("inside controller");
+		System.out.println(token);
+		boolean notes = noteservice.deleteCollab(noteid,userid,token);
 		if (notes) {
 			System.out.println(notes);
 			Response response = new Response("successfull", HttpStatus.OK.value(),notes);

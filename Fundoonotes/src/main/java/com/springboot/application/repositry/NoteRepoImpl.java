@@ -171,5 +171,11 @@ private EntityManager entity;
 		 List<Note> note=currentsession.createQuery("from Note where user_id='"+id+"'and reminder!='"+null+"'").getResultList();
 		 return note;
 	}
+	@Override
+	public List<Note> getcollab(long id) {
+		Session currentsession=entity.unwrap(Session.class);
+		 List<Note> note=currentsession.createQuery("from Note where user_id='"+id+"'and reminder!='"+null+"'").getResultList();
+		 return note;
+	}
 	
 }

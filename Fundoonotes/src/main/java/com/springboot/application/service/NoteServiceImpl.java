@@ -298,4 +298,57 @@ private ElasticService elasticservice;
 			
 		return false;
 	}
+
+	@Override
+	public boolean doCollab(long id, String email, String token) {
+		long ids=usertoken.parseToken(token);
+		if(userrepo.findbyId(ids)!=null)
+		{
+			Note noteinfo= noterepo.findbyId(id);
+			UserInfo userinfo=userrepo.findbyemail(email);
+			noteinfo.getUser().add(userinfo);
+			if(noterepo.createnote(noteinfo)) {
+				System.out.println("with collab");
+				return true;	
+			}
+			
+		}
+		System.out.println("without collab");
+			
+		return false;
+	}
+
+	@Override
+	public List<UserInfo> getCollab(long id, String token) {
+		long ids=usertoken.parseToken(token);
+		if(userrepo.findbyId(ids)!=null)
+		{
+			Note noteinfo= noterepo.findbyId(id);
+			
+			List<UserInfo>notes=noteinfo.getUser();
+			System.out.println(noteinfo.getUser());
+			System.out.println("inside if");
+				return notes;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean deleteCollab(long noteid, long userid, String token) {
+		long ids=usertoken.parseToken(token);
+		if(userrepo.findbyId(ids)!=null)
+		{
+			Note noteinfo= noterepo.findbyId(noteid);
+			UserInfo userinfo=userrepo.findbyId(userid);
+			noteinfo.getUser().remove(userinfo);
+			if(noterepo.createnote(noteinfo)) {
+				System.out.println("with collab");
+				return true;	
+			}
+			
+		}
+		System.out.println("without collab");
+			
+		return false;
+	}
 }

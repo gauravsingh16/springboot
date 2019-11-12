@@ -11,10 +11,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Component
 @Entity
@@ -40,8 +44,21 @@ public class UserInfo {
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId")
 	private List<Note> notes;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name="user_note",joinColumns = {@JoinColumn(name="userId")},inverseJoinColumns= {
+			@JoinColumn(name="note_id")})
+	
+	private List<Note> note;
+	
 
 
+	public List<Note> getNote() {
+		return note;
+	}
+
+	public void setNote(List<Note> note) {
+		this.note = note;
+	}
 
 	public long getUserId() {
 		return userId;
