@@ -139,7 +139,7 @@ private EntityManager entity;
 	
 	public List<Note> gettrashnote(long id) {
 		Session currentsession=entity.unwrap(Session.class);
-		List<Note>notes=currentsession.createQuery("from Note where user_id='"+id+"'and trash=true and pin=false and archive=false").getResultList();
+		List<Note>notes=currentsession.createQuery("from Note where user_id='"+id+"'and trash=true and pin=false ").getResultList();
 		return notes;
 		
 	}
@@ -168,7 +168,7 @@ private EntityManager entity;
 	public List<Note> getremindernote(long id) {
 		System.out.println(id);
 		Session currentsession=entity.unwrap(Session.class);
-		 List<Note> note=currentsession.createQuery("from Note where user_id='"+id+"'and reminder!='"+null+"'").getResultList();
+		 List<Note> note=currentsession.createQuery("from Note where user_id='"+id+"'and reminder!='"+null+"' and trash=false" ).getResultList();
 		 return note;
 	}
 	@Override

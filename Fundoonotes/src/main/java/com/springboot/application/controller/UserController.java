@@ -44,6 +44,7 @@ public class UserController {
 	private RabbitDetails rabbitdetails;
 	@Autowired
 	private MessageSender messagesender;
+	
 
 	@GetMapping("/")
 	public List<UserInfo> getalluser() {

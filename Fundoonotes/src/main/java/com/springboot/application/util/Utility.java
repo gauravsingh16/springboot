@@ -15,6 +15,7 @@ public class Utility {
 	{	
 		SimpleMailMessage message=new SimpleMailMessage();
 		message.setFrom("gauravpreet.98@gmail.com");
+		System.out.println(email);
 		message.setTo(email);
 		message.setSubject("verify your account");
 		message.setText(url);

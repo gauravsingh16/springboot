@@ -41,7 +41,7 @@ public class MessageReciever {
 					System.out.println(users.getId());
 					String token = tokens.tokengenerate(users.getId());
 					System.out.println(token);
-					String url = "http://localhost:8082/user/verify?token=" +token;
+					String url = "http://localhost:3000/verify/" +token;
 					util.mailsend(url,token,message1);
 
 				}

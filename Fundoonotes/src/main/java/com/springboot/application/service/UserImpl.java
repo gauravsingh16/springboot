@@ -41,17 +41,18 @@ public class UserImpl implements UserService {
 
 	@Override
 	public List<UserInfo> getuser(String token) {
-		long id=usertoken.parseToken(token);
-		UserInfo userinfo=userrepo.findbyId(id);
-		if(userinfo!=null) {
-		List<UserInfo> info = userrepo.getuser(id);
-			
-		return info;
+		long id = usertoken.parseToken(token);
+		UserInfo userinfo = userrepo.findbyId(id);
+		if (userinfo != null) {
+			List<UserInfo> info = userrepo.getuser(id);
+
+			return info;
 		}
 		return null;
 	}
+
 	@Override
-	public boolean save(Registerdto dto,String queue) {
+	public boolean save(Registerdto dto, String queue) {
 		System.out.println(dto.getEmail());
 		UserInfo userinfo = mapper.map(dto, UserInfo.class);
 		userinfo.setPassword(encoder.encode(userinfo.getPassword()));
@@ -69,25 +70,31 @@ public class UserImpl implements UserService {
 		return userrepo.getallusers();
 	}
 
-	
-
 	@Override
 	public Login dologin(Logindto user) {
 		UserInfo userinfo = mapper.map(user, UserInfo.class);
 		System.out.println(user.getEmail());
-		UserInfo info = userrepo.dologin(userinfo.getEmail());
-		System.out.println(info);
-		long ids = info.getId();
-		String token = usertoken.tokengenerate(ids);
-		System.out.println(token+"huiuu");
-		System.out.println(info.getPassword());
-		if (BCrypt.checkpw(user.getPassword(), info.getPassword())) {
-			System.out.println("matched");
-		Login login=new Login();
-		login.setToken(token);
-		login.setEmail(info.getEmail());
-		return login;
+		UserInfo user1 = userrepo.findbyemail(userinfo.getEmail());
+		if (user1!=null) {
+			if(user1.isIsverified())
+			{
+				UserInfo info = userrepo.dologin(userinfo.getEmail());
+			System.out.println(info);
+			long ids = info.getId();
+			String token = usertoken.tokengenerate(ids);
+			System.out.println(token + "huiuu");
+			System.out.println(info.getPassword());
+			if (BCrypt.checkpw(user.getPassword(), info.getPassword())) {
+				System.out.println("matched");
+				Login login = new Login();
+				login.setToken(token);
+				login.setEmail(info.getEmail());
+				return login;
+			}
+			return null;
+			}
 		}
+		
 		return null;
 	}
 
@@ -100,13 +107,13 @@ public class UserImpl implements UserService {
 		message.setSubject("change password");
 		UserInfo userinfo = mapper.map(user, UserInfo.class);
 		List<UserInfo> info = userrepo.sendemail(userinfo.getEmail());
-		for(UserInfo userInfo:info)
-		{	System.out.println(userInfo.getId());
+		for (UserInfo userInfo : info) {
+			System.out.println(userInfo.getId());
 			String token = usertoken.tokengenerate(userInfo.getId());
-			message.setText("http://localhost:8082/user/verify?token="+token);
+			message.setText("http://localhost:3000/verify/" + token);
 			mailsender.send(message);
 		}
-		
+
 		LOGGER.info("mail sends");
 		return true;
 	}
@@ -128,7 +135,7 @@ public class UserImpl implements UserService {
 		UserInfo userinfo = mapper.map(user, UserInfo.class);
 		UserInfo users = userrepo.forgetpassword(userinfo.getEmail());
 		String token = usertoken.tokengenerate(users.getId());
-		message.setText("http://localhost:3000/changepassword/"+users.getId());
+		message.setText("http://localhost:3000/changepassword/" + users.getId());
 		if (user.getEmail().equals(users.getEmail())) {
 			mailsender.send(message);
 			System.out.println("mail sends");
@@ -138,7 +145,7 @@ public class UserImpl implements UserService {
 	}
 
 	@Override
-	public boolean changepassword(long id,Logindto user) {
+	public boolean changepassword(long id, Logindto user) {
 		String newpassword = encoder.encode(user.getPassword());
 		System.out.println(newpassword);
 		boolean check = userrepo.changepassword(id, newpassword);
@@ -147,7 +154,5 @@ public class UserImpl implements UserService {
 		}
 		return false;
 	}
-
-	
 
 }

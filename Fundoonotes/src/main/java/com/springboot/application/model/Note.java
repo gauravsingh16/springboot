@@ -54,7 +54,7 @@ public class Note {
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name="user_note",joinColumns = {@JoinColumn(name="note_id")},inverseJoinColumns= {
 			@JoinColumn(name="userId")})
-	 @JsonIgnore
+
 	private List<UserInfo> user;
 	
 public List<UserInfo> getUser() {

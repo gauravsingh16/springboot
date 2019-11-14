@@ -85,7 +85,7 @@ public class NoteController {
 		System.out.println("inside controller");
 		List<Note>notes=noteservice.searchnote(token,title);
 		if (notes.size()>0) {
-			Response response = new Response("successfull", HttpStatus.OK.value());
+			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
 			return new ResponseEntity<>(response,  HttpStatus.OK);
 
 		} else {
@@ -271,7 +271,7 @@ public class NoteController {
 		boolean notes = noteservice.doCollab(id,email,token);
 		if (notes) {
 			System.out.println(notes);
-			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
+			Response response = new Response("successfull", HttpStatus.OK.value());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 
 		} else {
@@ -303,7 +303,7 @@ public class NoteController {
 		boolean notes = noteservice.deleteCollab(noteid,userid,token);
 		if (notes) {
 			System.out.println(notes);
-			Response response = new Response("successfull", HttpStatus.OK.value(),notes);
+			Response response = new Response("successfull", HttpStatus.OK.value());
 			return new ResponseEntity<>(response, HttpStatus.OK);
 
 		} else {

@@ -18,6 +18,7 @@ import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Component
@@ -47,7 +48,7 @@ public class UserInfo {
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name="user_note",joinColumns = {@JoinColumn(name="userId")},inverseJoinColumns= {
 			@JoinColumn(name="note_id")})
-	
+	@JsonIgnore
 	private List<Note> note;
 	
 
