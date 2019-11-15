@@ -50,7 +50,8 @@ public class ElasticService {
 	@SuppressWarnings("unchecked")
 	public String UpdateNote(Note note) throws Exception {
 		Map<String, Object> notemapper = objectmapper.convertValue(note, Map.class);
-		UpdateRequest updateRequest = new UpdateRequest(INDEX, TYPE, String.valueOf(note.getId()));
+		System.out.println(note.getId());
+		UpdateRequest updateRequest = new UpdateRequest(INDEX, TYPE, String.valueOf(note.getId())).doc(notemapper);
 		UpdateResponse updateResponse = config.client().update(updateRequest, RequestOptions.DEFAULT);
 		return updateResponse.getResult().name();
 	}

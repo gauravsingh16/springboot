@@ -39,19 +39,20 @@ public class NoteServiceImpl implements NoteService {
 		System.out.println(dto.getTitle());
 		System.out.println(id);
 		UserInfo userInfo = userrepo.findbyId(id);
+		System.out.println(userInfo);
 		if (userInfo != null) {
+			System.out.println("insidemapper");
 			Note info = mapper.map(dto, Note.class);
 			info.setArchive(false);
 			info.setPin(false);
 			info.setCreatetime(LocalDateTime.now());
 			info.setUpdatetime(LocalDateTime.now());
 			userInfo.getNotes().add(info);
-
 			boolean check = noterepo.createnote(info);
 			if (check) {
 				final String KEY=userInfo.getEmail();
-				try {	redisconfig.redistemplate().opsForValue().set(KEY, info);
-					System.out.println(info);
+				try {	//redisconfig.redistemplate().opsForValue().set(KEY, info);
+					System.out.println(info+"jello");
 					String check1 = elasticservice.CreateNote(info);
 
 					System.out.println(check1);
@@ -83,7 +84,7 @@ public class NoteServiceImpl implements NoteService {
 			boolean check = noterepo.deletenote(id);
 			if (check) {
 				try {
-					//elasticservice.DeleteNote(notes);
+					elasticservice.DeleteNote(notes);
 					System.out.println("inside check");
 					return true;
 				} catch (Exception e) {
@@ -143,7 +144,7 @@ public class NoteServiceImpl implements NoteService {
 		if (userInfo != null) {
 			System.out.println(userInfo);
 			final String KEY=userInfo.getEmail();	
-			System.out.println("redis"+redisconfig.redistemplate().opsForValue().get(KEY));
+			//System.out.println("redis"+redisconfig.redistemplate().opsForValue().get(KEY));
 			List<Note> notes = noterepo.getnotes(id);
 			notes.stream().filter(data -> data.isArchive() == false && !data.isTrash() && !data.isPin())
 					.collect(Collectors.toList());

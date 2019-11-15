@@ -7,7 +7,9 @@ public class Logindto {
 private String email;
 private String password;
 
-
+public Logindto() {}
+public Logindto(String email, String password) {
+}
 public String getEmail() {
 	return email;
 }
