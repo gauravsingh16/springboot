@@ -16,5 +16,10 @@ public class Login {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+	public Login(String token, String email) {
+		super();
+		this.token = token;
+		this.email = email;
+	}
+	public Login() {}
 }

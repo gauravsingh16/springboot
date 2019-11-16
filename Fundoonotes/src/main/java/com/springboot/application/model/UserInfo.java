@@ -156,4 +156,16 @@ public class UserInfo {
 		this.email = email;
 	}
 
+	public UserInfo(long userId, String username, String name, String email, String password, String address,
+			String mobileno) {
+		super();
+		this.userId = userId;
+		this.username = username;
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.address = address;
+		this.mobileno = mobileno;
+	}
+public UserInfo() {}
 }

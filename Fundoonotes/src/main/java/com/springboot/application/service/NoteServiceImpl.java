@@ -144,10 +144,12 @@ public class NoteServiceImpl implements NoteService {
 		if (userInfo != null) {
 			System.out.println(userInfo);
 			final String KEY=userInfo.getEmail();	
+			List<Note> collabNote=userInfo.getNote();
 			//System.out.println("redis"+redisconfig.redistemplate().opsForValue().get(KEY));
 			List<Note> notes = noterepo.getnotes(id);
 			notes.stream().filter(data -> data.isArchive() == false && !data.isTrash() && !data.isPin())
 					.collect(Collectors.toList());
+			notes.addAll(collabNote);
 			System.out.println(notes.size());
 			return notes;
 		}
