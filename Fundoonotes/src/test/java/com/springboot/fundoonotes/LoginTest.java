@@ -57,9 +57,9 @@ UserInfo userinfo=new UserInfo();
 userinfo.setIsverified(true);
 
 
-when(userRepository.findbyemail(user.getEmail())).thenReturn(listofusers);
-
- Login login=userService.dologin(user);
+//when(userRepository.findbyemail(user.getEmail())).thenReturn(listofusers);
+//
+// Login login=userService.dologin(user);
  
 assertEquals("",listofusers);
  

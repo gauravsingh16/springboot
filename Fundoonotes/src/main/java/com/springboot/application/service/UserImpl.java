@@ -50,12 +50,23 @@ public class UserImpl implements UserService {
 		}
 		return null;
 	}
+	@Override
+	public List<UserInfo> getuserbyemail(String email) {
+		
+		UserInfo userinfo = userrepo.findbyemail(email);
+		if (userinfo != null) {
+			List<UserInfo> info = userrepo.getuser(userinfo.getId());
 
+			return info;
+		}
+		return null;
+	}
 	@Override
 	public boolean save(Registerdto dto, String queue) {
 		System.out.println(dto.getEmail());
 		UserInfo userinfo = mapper.map(dto, UserInfo.class);
 		userinfo.setPassword(encoder.encode(userinfo.getPassword()));
+		
 		boolean check = userrepo.save(userinfo);
 		if (check) {
 			reciever.messagerecieve(queue);
@@ -151,6 +162,24 @@ public class UserImpl implements UserService {
 		boolean check = userrepo.changepassword(id, newpassword);
 		if (check) {
 			return true;
+		}
+		return false;
+	}
+	@Override
+	public boolean updateUser(Registerdto user, String token) {
+		long id=usertoken.parseToken(token);
+		UserInfo userinfo=userrepo.findbyId(id);
+		if(userinfo!=null)
+		{
+			UserInfo user1=mapper.map(user, UserInfo.class);
+			if(user1.getEmail().equals(userinfo.getEmail()))
+			{
+				boolean check=userrepo.save(user1);
+				if(check)
+				{
+					return true;
+				}
+			}
 		}
 		return false;
 	}

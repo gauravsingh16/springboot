@@ -17,7 +17,13 @@ spring:
     port: 587
     username: ${mailusername}
     password: ${mailpassword}
-   
+#  amazonProperties:
+#    endPointUrl: 
+#    accessKey: ${awsaccessKey}
+#    secretKey: ${awssecretKey}
+#    bucketName: ${awsbucketname}
+    
+  
           
  
     

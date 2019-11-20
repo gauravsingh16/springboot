@@ -11,7 +11,15 @@ private String email;
 private String password;
 private String address;
 private String mobileno;
+private String imageurl;
 
+
+public String getImageurl() {
+	return imageurl;
+}
+public void setImageurl(String imageurl) {
+	this.imageurl = imageurl;
+}
 public String getMobileno() {
 	return mobileno;
 }

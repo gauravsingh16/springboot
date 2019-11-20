@@ -25,5 +25,9 @@ public interface UserService {
 	public boolean forgetpassword(Logindto user);
 	
 	public boolean changepassword(long id,Logindto user);
+
+	List<UserInfo> getuserbyemail(String token);
+
+	public boolean updateUser(Registerdto user, String token);
 	
 }

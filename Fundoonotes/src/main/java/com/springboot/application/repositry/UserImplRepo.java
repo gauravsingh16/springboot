@@ -23,7 +23,7 @@ public class UserImplRepo implements UserRepo {
 	@Transactional
 	public boolean save(UserInfo info) {
 		Session session = entity.unwrap(Session.class);
-		session.save(info);
+		session.saveOrUpdate(info);
 		return true;
 	}
 

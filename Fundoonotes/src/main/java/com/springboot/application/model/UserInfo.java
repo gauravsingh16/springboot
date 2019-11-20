@@ -42,6 +42,8 @@ public class UserInfo {
 
 	@Column(name = "mobileno")
 	private String mobileno;
+	@Column(name="imageUrl")
+	private String imageurl;
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "userId")
 	private List<Note> notes;
@@ -154,6 +156,15 @@ public class UserInfo {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+
+	public String getImageurl() {
+		return imageurl;
+	}
+
+	public void setImageurl(String imageurl) {
+		this.imageurl = imageurl;
 	}
 
 	public UserInfo(long userId, String username, String name, String email, String password, String address,
